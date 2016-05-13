@@ -132,6 +132,8 @@ abstract class AbstractChecksumMojo
     @Parameter( defaultValue = "" )
     protected String relativeSubPath = "";
 
+    
+    protected List<ExecutionTarget> otherTargets;
     /**
      * {@inheritDoc}
      */
@@ -163,6 +165,10 @@ abstract class AbstractChecksumMojo
             }
             execution.addTarget( new OneHashPerFileTarget( encoding, outputDirectory, createArtifactListeners()) );
         }
+        if(!otherTargets.isEmpty())
+        	for(ExecutionTarget t : otherTargets){
+        		execution.addTarget(t);
+        	}
         if ( isCsvSummary() )
         {
             execution.addTarget( new CsvSummaryFileTarget(
@@ -193,7 +199,7 @@ abstract class AbstractChecksumMojo
         }
     }
 
-    private Iterable<? extends ArtifactListener> createArtifactListeners() {
+	protected Iterable<? extends ArtifactListener> createArtifactListeners() {
         if (!attachChecksums) {
             return Collections.emptyList();
         }
